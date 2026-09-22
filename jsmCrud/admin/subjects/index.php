@@ -1,3 +1,18 @@
+<?php
+    session_start();
+    include "../../config/database.php";
+
+    //only admin can access this page.
+    if (!isset($_SESSION["role"]) || $_SESSION["role"] != "admin"){
+        header("Location: ../../index.php");
+        exit;
+    }
+
+    $sql = "SELECT * FROM subjects 
+    ORDER BY id DESC";
+    $result = mysqli_query($conn, $sql);
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -42,20 +57,22 @@
 
     <!-- Main Content -->
     <div class="container py-4">
-
+        <?php if(isset($_GET["message"])){?>
+            <div class="alert alert-success"><?php echo $_GET["message"];?></div>
+        <?php }?>
         <!-- Header Section -->
         <div class="d-flex justify-content-between mb-3">
 
             <div>
                 <h2>Subjects</h2>
 
-                <a href="dashboard.html">
+                <a href="../dashboard.php">
                     ← Dashboard
                 </a>
             </div>
 
             <a
-                href="subject_form.html"
+                href="create.php"
                 class="btn btn-primary"
             >
                 + Add Subject
@@ -81,31 +98,37 @@
 
                     <tbody>
 
-                        <!-- Subject Record -->
-                        <tr>
-                            <td>IT101</td>
+                        <!-- Student Record -->
+                         <?php while($row = mysqli_fetch_assoc($result)){?>
+                            <tr>
+                                <td>
+                                    <?php echo htmlspecialchars($row["subject_code"])?>
+                                </td>
 
-                            <td>
-                                Introduction to Computing
-                            </td>
+                                <td>
+                                    <?php echo htmlspecialchars($row["subject_name"])?>
+                                </td>
 
-                            <td>3</td>
+                                <td>
+                                    <?php echo htmlspecialchars($row["units"])?>
+                                </td>
 
-                            <td>
-                                <a
-                                    href="subject_form.html"
-                                    class="btn btn-warning btn-sm"
-                                >
-                                    Edit
-                                </a>
+                                <td>
+                                    <a
+                                        href="student_form.html"
+                                        class="btn btn-warning btn-sm"
+                                    >
+                                        Edit
+                                    </a>
 
-                                <button
-                                    class="btn btn-danger btn-sm"
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
+                                    <button
+                                        class="btn btn-danger btn-sm"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php }?>
 
                     </tbody>
 

@@ -1,3 +1,18 @@
+<?php
+    session_start();
+    include "../../config/database.php";
+
+    //only admin can access this page.
+    if (!isset($_SESSION["role"]) || $_SESSION["role"] != "admin"){
+        header("Location: ../../index.php");
+        exit;
+    }
+
+    $sql = "SELECT * FROM users 
+    WHERE role='student' ORDER BY id DESC";
+    $result = mysqli_query($conn, $sql);
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -42,21 +57,23 @@
 
     <!-- Main Content -->
     <div class="container py-4">
-
+        <?php if(isset($_GET["message"])){?>
+            <div class="alert alert-success"><?php echo $_GET["message"];?></div>
+        <?php }?>
         <!-- Header Section -->
         <div class="d-flex justify-content-between mb-3">
 
             <div>
                 <h2>Student Accounts</h2>
 
-                <a href="dashboard.html">
+                <a href="../dashboard.php">
                     ← Dashboard
                 </a>
             </div>
 
             <a
                 class="btn btn-primary"
-                href="student_form.html"
+                href="create.php"
             >
                 + Add Student
             </a>
@@ -81,40 +98,43 @@
                     <tbody>
 
                         <!-- Student Record -->
-                        <tr>
-                            <td>2026-0001</td>
+                         <?php while($row = mysqli_fetch_assoc($result)){?>
+                            <tr>
+                                <td>
+                                    <?php echo htmlspecialchars($row["student_no"])?>
+                                </td>
 
-                            <td>
-                                Juan Dela Cruz
-                            </td>
+                                <td>
+                                    <?php echo htmlspecialchars($row["full_name"])?>
+                                </td>
 
-                            <td>
-                                juan
-                            </td>
+                                <td>
+                                    <?php echo htmlspecialchars($row["username"])?>
+                                </td>
 
-                            <td>
-                                <a
-                                    class="btn btn-success btn-sm"
-                                    href="enroll.html"
-                                >
-                                    Enroll Subjects
-                                </a>
+                                <td>
+                                    <a
+                                        class="btn btn-success btn-sm"
+                                        href="enroll.html"
+                                    >
+                                        Enroll Subjects
+                                    </a>
 
-                                <a
-                                    class="btn btn-warning btn-sm"
-                                    href="student_form.html"
-                                >
-                                    Edit
-                                </a>
+                                    <a
+                                        class="btn btn-warning btn-sm"
+                                        href="student_form.html"
+                                    >
+                                        Edit
+                                    </a>
 
-                                <button
-                                    class="btn btn-danger btn-sm"
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-
+                                    <button
+                                        class="btn btn-danger btn-sm"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php }?>
                     </tbody>
 
                 </table>
