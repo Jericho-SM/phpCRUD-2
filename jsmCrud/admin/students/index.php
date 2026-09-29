@@ -127,11 +127,13 @@
                                         Edit
                                     </a>
 
-                                    <button
+                                    <a
                                         class="btn btn-danger btn-sm"
+                                        href="delete.php?id=<?php echo $row['id'];?>"
+                                        onclick = "return confirm('Are you sure you want to Delete this record')"
                                     >
                                         Delete
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         <?php }?>
