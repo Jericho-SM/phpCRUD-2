@@ -115,7 +115,7 @@
 
                                 <td>
                                     <a
-                                        href="student_form.html"
+                                        href="edit.php?id=<?php echo $row['id'];?>"
                                         class="btn btn-warning btn-sm"
                                     >
                                         Edit
